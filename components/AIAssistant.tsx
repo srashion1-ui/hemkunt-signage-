@@ -27,8 +27,10 @@ const AIAssistant: React.FC = () => {
     setIsLoading(true);
 
     try {
-      if (!process.env.API_KEY) {
-         // Fallback if no API key is set in environment (mock response)
+      // Defensive check for process.env
+      const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : null;
+
+      if (!apiKey) {
          setTimeout(() => {
            setMessages(prev => [...prev, { role: 'model', text: "I'm currently running in demo mode. Please configure the Gemini API Key to enable real responses." }]);
            setIsLoading(false);
@@ -36,7 +38,7 @@ const AIAssistant: React.FC = () => {
          return;
       }
 
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       
       const systemContext = `
         You are an AI assistant for ${COMPANY_NAME}, a signage and branding company.
@@ -47,7 +49,7 @@ const AIAssistant: React.FC = () => {
       `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: [
           { role: 'user', parts: [{ text: systemContext + "\n\nUser Question: " + userMessage }] }
         ]

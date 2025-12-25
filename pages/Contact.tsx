@@ -26,7 +26,9 @@ const Contact: React.FC = () => {
     setIsDrafting(true);
     
     try {
-      if (!process.env.API_KEY) {
+      const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : null;
+
+      if (!apiKey) {
          setFormData(prev => ({
            ...prev,
            message: `[AI DRAFT]\nDear Hemkunt Team,\n\nI am interested in ${prev.interestedIn || 'your services'}. \n\nRegarding: ${prev.subject}\n\nCould you please provide more information?`
@@ -35,7 +37,7 @@ const Contact: React.FC = () => {
          return;
       }
 
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       const prompt = `Rewrite this short message into a professional business inquiry email for a signage company named Hemkunt Signage.
       User Intent: ${formData.subject}
       Draft details: ${formData.message}
@@ -43,7 +45,7 @@ const Contact: React.FC = () => {
       `;
       
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: [{ role: 'user', parts: [{ text: prompt }] }]
       });
       

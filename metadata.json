@@ -1,5 +1,7 @@
 {
   "name": "Hemkunt Signage",
   "description": "Premium signage and branding solutions for businesses, featuring a dark-themed UI, dynamic animations, and AI-powered assistance.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "camera"
+  ]
 }

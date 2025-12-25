@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
-import { SERVICES, PRODUCTS, TESTIMONIALS, CLIENT_LOGOS, HIGHLIGHTS } from '../constants';
-import { Play, ArrowRight } from 'lucide-react';
+import { SERVICES, PRODUCTS, TESTIMONIALS, CLIENT_LOGOS, HIGHLIGHTS } from '../constants.tsx';
+import { Play, ArrowRight, Star, Quote } from 'lucide-react';
 
 interface HomeProps {
   setActivePage: (page: string) => void;
@@ -10,11 +11,10 @@ const Home: React.FC<HomeProps> = ({ setActivePage }) => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [activeProduct, setActiveProduct] = useState(0);
 
-  // Auto-rotate products
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveProduct((prev) => (prev + 1) % PRODUCTS.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
@@ -26,291 +26,263 @@ const Home: React.FC<HomeProps> = ({ setActivePage }) => {
   };
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden bg-black">
       
       {/* HERO SECTION */}
-      <section id="home" className="relative min-h-screen flex flex-col justify-center items-center bg-black pt-20">
-        {/* Background Image Overlay */}
-        <div className="absolute inset-0 z-0 opacity-50 bg-[url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/90 via-black/50 to-black"></div>
+      <section id="home" className="relative min-h-screen flex flex-col justify-center items-center bg-black overflow-hidden">
+        {/* Background Overlay */}
+        <div className="absolute inset-0 z-0 scale-110 animate-pulse-soft">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black z-10"></div>
+          <img 
+            src="https://images.unsplash.com/photo-1563245372-f21d1396a7a4?q=80&w=2070&auto=format&fit=crop" 
+            alt="Signage backdrop" 
+            className="w-full h-full object-cover opacity-60"
+          />
+        </div>
 
-        <div className="container mx-auto px-4 z-20 text-center mt-10 md:mt-0 animate-fade-in">
-          <h2 className="text-brand font-bold text-sm md:text-base tracking-[0.2em] mb-4 animate-slide-up">PREMIUM BRANDING EXPERTS</h2>
+        <div className="container mx-auto px-6 z-20 text-center relative pt-20">
+          <div className="inline-block mb-6 animate-slide-up">
+            <span className="text-brand font-bold text-xs md:text-sm tracking-[0.5em] uppercase border-b-2 border-brand/30 pb-2">Crafting Visual Legacies</span>
+          </div>
           
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white uppercase leading-tight mb-8 max-w-6xl mx-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-            <span className="block animate-blur-in">WE BUILD SIGNS</span>
-            <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-brand via-yellow-200 to-brand-red bg-[length:300%_auto] animate-gradient pb-2">THAT BUILD BRANDS</span>
+          <h1 className="text-5xl md:text-7xl lg:text-9xl font-black text-white uppercase leading-none mb-8 tracking-tighter">
+            <span className="block animate-blur-in [animation-delay:0.2s]">PRECISION</span>
+            <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-brand via-yellow-200 to-brand-red bg-[length:200%_auto] animate-gradient pb-4 neon-text">SIGNAGE</span>
           </h1>
           
-          <p className="font-body text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-12 animate-slide-up" style={{animationDelay: '0.5s'}}>
-            We create high-quality signs that make your business look great. From design to installation across India, we take care of everything to help your brand get noticed.
+          <p className="font-body text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 animate-slide-up [animation-delay:0.4s] leading-relaxed">
+            From the heart of Delhi to the skylines of India, we engineer high-impact visual identities that define modern brands.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16 animate-slide-up" style={{animationDelay: '0.6s'}}>
-            {SERVICES.map((service, idx) => (
-              <div 
-                key={idx} 
-                onClick={() => setActivePage('services')}
-                className="group bg-gray-900/80 backdrop-blur-md p-8 rounded-sm border-b-4 border-transparent hover:border-brand transition-all duration-300 hover:-translate-y-2 cursor-pointer flex flex-col items-center shadow-xl"
-              >
-                <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand transition-colors text-white group-hover:text-black">
-                  <service.icon size={32} />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-3 text-center uppercase">{service.title}</h3>
-                <p className="text-gray-400 text-sm text-center hidden group-hover:block animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  {service.description}
-                </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-slide-up [animation-delay:0.6s]">
+            <button 
+              onClick={() => setActivePage('products')}
+              className="group bg-brand text-black font-black py-5 px-10 rounded-full hover:bg-white transition-all uppercase tracking-[0.2em] text-sm flex items-center gap-3 neon-border"
+            >
+              Explore Products <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+            </button>
+            <button 
+              onClick={() => scrollToSection('about')}
+              className="group text-white font-bold py-5 px-10 rounded-full border border-white/20 hover:border-brand transition-all uppercase tracking-[0.2em] text-sm bg-white/5 backdrop-blur-sm"
+            >
+              Our Legacy
+            </button>
+          </div>
+
+          {/* Quick Stats Banner */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto py-10 border-t border-white/10 animate-fade-in [animation-delay:0.8s]">
+            {[
+              { val: '42+', lab: 'Years Experience' },
+              { val: '1000+', lab: 'Cities Covered' },
+              { val: '5k+', lab: 'Projects Delivered' },
+              { val: '100%', lab: 'In-House Fab' }
+            ].map((stat, i) => (
+              <div key={i} className="flex flex-col">
+                <span className="text-2xl font-black text-brand">{stat.val}</span>
+                <span className="text-[10px] text-gray-500 uppercase tracking-widest">{stat.lab}</span>
               </div>
             ))}
           </div>
-
-          <button 
-            onClick={() => scrollToSection('about')}
-            className="bg-brand-red text-white font-bold py-4 px-10 rounded-full hover:bg-white hover:text-black transition-colors uppercase tracking-wider text-sm shadow-[0_0_20px_rgba(225,29,72,0.4)] animate-pulse hover:animate-none"
-          >
-            Discover More
-          </button>
         </div>
       </section>
 
-      {/* ABOUT US SECTION */}
-      <section id="about" className="py-24 bg-black relative">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center text-center">
-             <div className="w-20 h-1 bg-brand mb-8"></div>
-             <h2 className="text-3xl md:text-5xl font-extrabold text-white uppercase mb-6">The Hemkunt Difference</h2>
-             <p className="max-w-3xl text-gray-400 text-lg leading-relaxed mb-12">
-               With decades of expertise in the visual communication industry, Hemkunt Signage stands at the forefront of brand implementation. 
-               We combine precision engineering with creative design to deliver signage that not only looks spectacular but endures the test of time. 
-               Our state-of-the-art manufacturing facility in Delhi allows us to maintain strict quality control and deliver on tight timelines.
-             </p>
-             
-             <div className="relative group cursor-pointer mb-12" onClick={() => setActivePage('about')}>
-               <div className="w-24 h-24 rounded-full border-2 border-brand/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                 <div className="w-16 h-16 bg-brand rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.5)]">
-                    <Play className="fill-black text-black ml-1" size={24} />
-                 </div>
-               </div>
-               <div className="absolute top-0 left-0 w-full h-full rounded-full border border-brand animate-ping opacity-20"></div>
-             </div>
+      {/* SERVICES PREVIEW GRID */}
+      <section className="py-24 bg-zinc-950">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-brand font-bold tracking-widest uppercase text-sm mb-4">Core Competencies</h2>
+              <h3 className="text-4xl md:text-5xl font-black text-white uppercase leading-tight">Mastering The Art Of <span className="text-white/40">Visual Impact</span></h3>
+            </div>
+            <button onClick={() => setActivePage('services')} className="text-brand font-black uppercase text-xs tracking-widest border-b border-brand pb-2 hover:text-white hover:border-white transition-all">
+              View All Services
+            </button>
+          </div>
 
-             <button 
-                onClick={() => setActivePage('about')}
-                className="bg-brand-red text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-black transition-colors uppercase tracking-wider text-sm shadow-lg"
-             >
-               Read Our Story
-             </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
+            {SERVICES.map((service, idx) => (
+              <div 
+                key={idx} 
+                className="group relative bg-black p-12 overflow-hidden border border-white/5 hover:border-brand/20 transition-all duration-700 h-[400px] flex flex-col justify-end"
+              >
+                <div className="absolute top-12 left-12 text-brand/20 group-hover:text-brand transition-colors duration-500">
+                  <service.icon size={64} strokeWidth={1} />
+                </div>
+                <div className="relative z-10">
+                  <h4 className="text-xl font-black text-white mb-4 uppercase tracking-tighter group-hover:text-brand transition-colors">{service.title}</h4>
+                  <p className="text-gray-500 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                    {service.description}
+                  </p>
+                </div>
+                <div className="absolute inset-0 bg-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 shimmer"></div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* HIGHLIGHTS SECTION (Why Choose Us) */}
-      <section className="py-24 bg-zinc-900 relative">
-        {/* Geometric background pattern */}
-        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#444 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="text-brand font-bold tracking-widest uppercase mb-2">Why Choose Us?</h2>
-                <h3 className="text-3xl md:text-5xl font-black text-white uppercase mb-6">Excellence in Every Detail</h3>
-                <div className="w-20 h-1 bg-brand mx-auto mb-6"></div>
-                <p className="text-gray-400">We don't just build signs; we build trust through quality, reliability, and decades of expertise.</p>
+      {/* ABOUT PREVIEW */}
+      <section id="about" className="py-32 bg-black relative">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="relative">
+              <div className="aspect-[4/5] overflow-hidden rounded-2xl relative z-10">
+                <img src="https://images.unsplash.com/photo-1572021335469-31706a17aaef?q=80&w=2070&auto=format&fit=crop" alt="Hemkunt Factory" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
+              </div>
+              <div className="absolute -top-10 -left-10 w-64 h-64 bg-brand/20 rounded-full blur-[120px] -z-0"></div>
+              <div className="absolute bottom-10 -right-10 bg-brand p-12 rounded-2xl z-20 shadow-2xl hidden md:block">
+                <span className="block text-4xl font-black text-black">42</span>
+                <span className="block text-xs font-bold text-black uppercase tracking-widest">Years of Craft</span>
+              </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {HIGHLIGHTS.map((item, index) => (
-                    <div key={index} className="group bg-black p-8 rounded-2xl border border-white/5 hover:border-brand/50 transition-all duration-500 hover:shadow-[0_0_30px_rgba(245,158,11,0.15)] relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-150 group-hover:bg-brand/10"></div>
-                        
-                        <div className="w-14 h-14 bg-gray-800 rounded-xl flex items-center justify-center text-white mb-6 group-hover:bg-brand group-hover:text-black transition-colors duration-300 relative z-10 shadow-lg">
-                            <item.icon size={28} strokeWidth={1.5} />
-                        </div>
-                        
-                        <h4 className="text-xl font-bold text-white mb-3 group-hover:translate-x-2 transition-transform duration-300">{item.title}</h4>
-                        <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
-                            {item.description}
-                        </p>
-                    </div>
-                ))}
+            
+            <div>
+              <h2 className="text-brand font-bold tracking-widest uppercase text-sm mb-6">Our Legacy</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white uppercase mb-8 leading-none">The standard of <span className="text-brand">Excellence</span> since 1982.</h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-10">
+                Founded on the principles of precision engineering and aesthetic mastery, Hemkunt Signage has evolved from a local workshop into a pan-India branding powerhouse. We don't just manufacture signs; we build the landmarks that define your business's presence.
+              </p>
+              <div className="grid grid-cols-2 gap-8 mb-12">
+                <div>
+                  <h4 className="text-white font-bold mb-2 uppercase text-sm">Quality Control</h4>
+                  <p className="text-gray-500 text-sm">Rigorous multi-stage inspection for every single LED chip and structural weld.</p>
+                </div>
+                <div>
+                  <h4 className="text-white font-bold mb-2 uppercase text-sm">Pan-India Support</h4>
+                  <p className="text-gray-500 text-sm">A dedicated network of technicians across every major Indian territory.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setActivePage('about')}
+                className="bg-white text-black font-black py-4 px-10 rounded-full hover:bg-brand transition-colors uppercase tracking-widest text-xs"
+              >
+                Learn More
+              </button>
             </div>
+          </div>
         </div>
       </section>
 
-      {/* PRODUCTS CAROUSEL SECTION */}
-      <section id="products" className="py-20 bg-gray-900">
-        <div className="container mx-auto px-4">
-           <h2 className="text-3xl md:text-4xl font-extrabold text-white uppercase text-center mb-4">Featured Products</h2>
-           <div className="w-20 h-1 bg-brand mx-auto mb-16"></div>
+      {/* FEATURED PRODUCT CAROUSEL */}
+      <section className="py-24 bg-zinc-950">
+        <div className="container mx-auto px-6">
+          <div className="max-w-6xl mx-auto rounded-[40px] overflow-hidden bg-white flex flex-col lg:flex-row shadow-[0_50px_100px_rgba(0,0,0,0.4)]">
+            {/* Image Side */}
+            <div className="lg:w-1/2 h-[400px] lg:h-auto relative bg-black overflow-hidden">
+               {PRODUCTS.map((product, idx) => (
+                 <img 
+                   key={idx}
+                   src={product.image} 
+                   alt={product.title}
+                   className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+                     idx === activeProduct ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
+                   }`}
+                 />
+               ))}
+               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+            </div>
 
-           <div className="max-w-6xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[450px]">
-             
-             {/* Image Side */}
-             <div className="md:w-1/2 relative bg-black h-80 md:h-auto overflow-hidden group">
-                {PRODUCTS.map((product, index) => (
-                  <img 
-                    key={product.id}
-                    src={product.image} 
-                    alt={product.title} 
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out ${
-                      index === activeProduct ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
+            {/* Content Side */}
+            <div className="lg:w-1/2 p-12 lg:p-20 flex flex-col justify-center bg-white relative">
+               <div className="flex gap-2 mb-8">
+                 {PRODUCTS.map((_, idx) => (
+                   <button 
+                    key={idx}
+                    onClick={() => setActiveProduct(idx)}
+                    className={`h-1.5 transition-all duration-500 rounded-full ${
+                      idx === activeProduct ? 'w-12 bg-brand' : 'w-4 bg-gray-200 hover:bg-gray-300'
                     }`}
-                  />
-                ))}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent pointer-events-none"></div>
-             </div>
-
-             {/* Content Side */}
-             <div className="md:w-1/2 p-10 md:p-14 flex flex-col justify-center bg-gray-50 relative">
-               
-               {/* Vertical Navigation Dots */}
-               <div className="absolute right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 z-10">
-                  {PRODUCTS.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveProduct(idx)}
-                      className={`w-2 rounded-full transition-all duration-500 ease-in-out ${
-                        idx === activeProduct 
-                          ? 'h-8 bg-brand-red shadow-[0_0_10px_rgba(225,29,72,0.5)]' 
-                          : 'h-2 bg-gray-300 hover:bg-gray-400'
-                      }`}
-                      aria-label={`View product ${idx + 1}`}
-                    />
-                  ))}
+                   />
+                 ))}
                </div>
 
-               {/* Text Content */}
-               <div className="pr-8">
-                 {PRODUCTS.map((product, index) => {
-                   if (index !== activeProduct) return null;
-                   return (
-                     <div key={product.id} className="animate-fade-in">
-                       <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 uppercase border-l-4 border-brand pl-4 animate-slide-up">
-                         {product.title}
-                       </h3>
-                       <p className="text-gray-600 leading-relaxed mb-8 text-lg animate-slide-up" style={{animationDelay: '0.1s'}}>
-                         {product.description}
-                       </p>
-                       
-                       <button 
-                        onClick={() => setActivePage('products')}
-                        className="bg-brand-red text-white font-bold py-3 px-8 rounded-full hover:bg-black transition-colors uppercase tracking-wider text-sm shadow-lg animate-slide-up hover:shadow-xl transform active:scale-95 origin-left"
-                        style={{animationDelay: '0.2s'}}
-                       >
-                         View All
-                       </button>
-                     </div>
-                   );
-                 })}
-               </div>
-
-             </div>
-           </div>
-        </div>
-      </section>
-
-      {/* CLIENTS SECTION */}
-      <section id="clients" className="py-20 bg-black">
-         <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white uppercase mb-4">Trusted By Industry Leaders</h2>
-            <div className="w-20 h-1 bg-brand mx-auto mb-8"></div>
-            <p className="max-w-3xl mx-auto text-gray-400 mb-12">
-              From multinational corporations to local retail giants, we have successfully delivered branding solutions for diverse sectors.
-            </p>
-
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6 max-w-6xl mx-auto mb-12">
-               {CLIENT_LOGOS.slice(0, 10).map((logo, i) => (
-                 <div key={i} className="bg-white p-4 flex items-center justify-center h-24 hover:scale-105 transition-transform rounded-sm">
-                   <img src={logo} alt={`Client ${i}`} className="max-h-16 max-w-full grayscale hover:grayscale-0 transition-all opacity-80 hover:opacity-100" />
+               {PRODUCTS.map((product, idx) => (
+                 <div key={idx} className={`${idx === activeProduct ? 'block animate-fade-in' : 'hidden'}`}>
+                   <h3 className="text-3xl md:text-5xl font-black text-black uppercase mb-6 leading-tight">{product.title}</h3>
+                   <p className="text-gray-600 text-lg leading-relaxed mb-10">{product.description}</p>
+                   <button 
+                    onClick={() => setActivePage('products')}
+                    className="bg-black text-white font-black py-4 px-10 rounded-full hover:bg-brand hover:text-black transition-all uppercase tracking-widest text-xs"
+                   >
+                     Product Details
+                   </button>
                  </div>
                ))}
             </div>
-
-            <button 
-              onClick={() => setActivePage('clients')}
-              className="bg-brand-red text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-black transition-colors uppercase tracking-wider text-sm shadow-lg"
-            >
-               View All Clients
-            </button>
-         </div>
-      </section>
-
-      {/* PARTNER BANNER */}
-      <section className="py-24 bg-gradient-to-r from-gray-900 to-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-           <h2 className="text-2xl md:text-4xl font-extrabold text-white uppercase leading-tight mb-8">
-             YOUR PARTNER IN REMARKABLE <span className="text-brand">BRAND EXPERIENCES</span>
-           </h2>
-           <p className="max-w-4xl mx-auto text-gray-300 mb-12 leading-relaxed text-lg">
-             Your brand is your business's most valuable asset. It's the first thing people see and their lasting impression.
-             Don't leave your brand's implementation to chance. Partner with Hemkunt Signage for precision, quality, and impact.
-           </p>
-           <button 
-            onClick={() => setActivePage('contact')}
-            className="border-2 border-brand text-brand hover:bg-brand hover:text-black font-bold py-4 px-10 transition-colors uppercase tracking-wider text-sm"
-           >
-             Start Your Project
-           </button>
+          </div>
         </div>
       </section>
 
-      {/* TESTIMONIALS SECTION */}
-      <section className="py-24 bg-gray-900 text-center relative overflow-hidden">
-         <div className="container mx-auto px-4">
-           <h2 className="text-3xl font-extrabold text-white uppercase mb-16">What Our Clients Say</h2>
-           
-           {/* Solar System UI for Testimonials */}
-           <div className="relative h-[500px] w-full max-w-4xl mx-auto flex items-center justify-center">
-              
-              {/* Central Active User */}
-              <div className="relative z-20 flex flex-col items-center animate-fade-in">
-                 <div className="w-32 h-32 rounded-full border-4 border-brand p-1 bg-black mb-6 shadow-[0_0_30px_rgba(245,158,11,0.3)]">
-                    <img 
-                      src={TESTIMONIALS[currentTestimonial].image} 
-                      alt="Active Client" 
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                 </div>
-                 <h3 className="text-2xl font-bold text-white mb-2">{TESTIMONIALS[currentTestimonial].name}</h3>
-                 <div className="w-12 h-1 bg-brand mb-6"></div>
-                 <p className="text-gray-300 italic max-w-lg text-lg">"{TESTIMONIALS[currentTestimonial].text}"</p>
+      {/* TESTIMONIALS - SOLAR SYSTEM THEME */}
+      <section className="py-32 bg-black relative overflow-hidden">
+         <div className="container mx-auto px-6 text-center relative z-10">
+            <h2 className="text-brand font-bold tracking-widest uppercase text-sm mb-6">Client Success</h2>
+            <h3 className="text-4xl md:text-6xl font-black text-white uppercase mb-20">Voices of <span className="text-white/30">Trust</span></h3>
+            
+            <div className="relative h-[600px] flex items-center justify-center">
+              {/* Central Panel */}
+              <div className="bg-zinc-900 border border-white/10 p-10 md:p-16 rounded-[40px] max-w-2xl w-full z-20 shadow-2xl relative">
+                <Quote className="text-brand/20 absolute -top-8 -left-8" size={80} />
+                <div className="flex items-center justify-center mb-8">
+                  <div className="w-24 h-24 rounded-full border-2 border-brand p-1 bg-black overflow-hidden shadow-lg">
+                    <img src={TESTIMONIALS[currentTestimonial].image} alt="User" className="w-full h-full object-cover rounded-full" />
+                  </div>
+                </div>
+                <p className="text-xl md:text-2xl italic text-gray-200 leading-relaxed mb-8">"{TESTIMONIALS[currentTestimonial].text}"</p>
+                <h4 className="text-xl font-bold text-brand uppercase tracking-widest">{TESTIMONIALS[currentTestimonial].name}</h4>
+                <div className="flex justify-center gap-1 mt-4">
+                  {[...Array(5)].map((_, i) => <Star key={i} size={16} className="fill-brand text-brand" />)}
+                </div>
               </div>
 
-              {/* Orbiting Users (Decorative) */}
-              <div className="absolute inset-0 z-10 hidden md:block animate-spin-slow" style={{ animationDuration: '60s' }}>
+              {/* Orbiting Icons (Desktop only for better UX) */}
+              <div className="absolute inset-0 z-10 hidden lg:block animate-spin-slow">
                  {TESTIMONIALS.map((t, i) => {
                    if (i === currentTestimonial) return null;
                    const angle = (i * (360 / TESTIMONIALS.length)) * (Math.PI / 180);
-                   const radius = 250; // px
+                   const radius = 320;
                    const x = Math.cos(angle) * radius;
                    const y = Math.sin(angle) * radius;
                    
                    return (
                      <div 
-                       key={t.id}
-                       className="absolute w-16 h-16 rounded-full border-2 border-gray-600 bg-black cursor-pointer hover:border-brand transition-colors transform hover:scale-125"
+                       key={i}
+                       className="absolute w-20 h-20 rounded-full border-2 border-white/10 bg-zinc-900 cursor-pointer hover:border-brand transition-all transform hover:scale-125 z-30 group shadow-xl"
                        style={{ 
-                         left: `calc(50% + ${x}px - 32px)`, 
-                         top: `calc(50% + ${y}px - 32px)`,
+                         left: `calc(50% + ${x}px - 40px)`, 
+                         top: `calc(50% + ${y}px - 40px)`,
+                         animation: 'spin 12s linear infinite reverse'
                        }}
                        onClick={() => setCurrentTestimonial(i)}
                      >
-                       <img src={t.image} alt={t.name} className="w-full h-full rounded-full object-cover opacity-60 hover:opacity-100" />
-                       
-                       {/* Connection Line to Center */}
-                       <div 
-                        className="absolute top-1/2 left-1/2 h-[1px] bg-gray-800 -z-10 origin-left"
-                        style={{ 
-                          width: `${radius}px`,
-                          transform: `rotate(${angle + 180}rad)` 
-                        }}
-                       ></div>
+                       <img src={t.image} alt={t.name} className="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0 transition-all opacity-40 group-hover:opacity-100" />
                      </div>
                    );
                  })}
               </div>
-           </div>
+
+              {/* Orbit Rings */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[640px] border border-white/5 rounded-full z-0 hidden lg:block"></div>
+            </div>
          </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="py-40 bg-brand relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/5 opacity-20 pointer-events-none">
+          <div className="grid grid-cols-12 h-full">
+            {[...Array(12)].map((_, i) => <div key={i} className="border-r border-black/10"></div>)}
+          </div>
+        </div>
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <h2 className="text-black text-5xl md:text-8xl font-black uppercase mb-12 tracking-tighter leading-none">Ready to <br/>Illuinate your brand?</h2>
+          <button 
+            onClick={() => setActivePage('contact')}
+            className="bg-black text-white font-black py-6 px-16 rounded-full hover:bg-white hover:text-black transition-all uppercase tracking-[0.3em] text-sm shadow-2xl"
+          >
+            Start Your Project
+          </button>
+        </div>
       </section>
     </div>
   );

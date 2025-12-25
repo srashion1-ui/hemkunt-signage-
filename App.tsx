@@ -1,16 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Loader from './components/Loader';
-import Home from './pages/Home';
-import Contact from './pages/Contact';
-import Services from './pages/Services';
-import About from './pages/About';
-import Products from './pages/Products';
-import Clients from './pages/Clients';
-import Careers from './pages/Careers';
-import Shop from './pages/Shop';
-import AIAssistant from './components/AIAssistant';
+import Header from './components/Header.tsx';
+import Footer from './components/Footer.tsx';
+import Loader from './components/Loader.tsx';
+import Home from './pages/Home.tsx';
+import Contact from './pages/Contact.tsx';
+import Services from './pages/Services.tsx';
+import About from './pages/About.tsx';
+import Products from './pages/Products.tsx';
+import Clients from './pages/Clients.tsx';
+import Careers from './pages/Careers.tsx';
+import Shop from './pages/Shop.tsx';
+import AIAssistant from './components/AIAssistant.tsx';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,7 @@ const App: React.FC = () => {
     // Simulate initial load
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -43,16 +44,25 @@ const App: React.FC = () => {
       {loading && <Loader />}
       
       {!loading && (
-        <>
+        <div className="animate-fade-in">
           <Header activePage={activePage} setActivePage={setActivePage} />
           
-          <main className="fade-in min-h-screen">
+          <main className="min-h-screen">
             {renderPage()}
           </main>
 
           <Footer />
           <AIAssistant />
-        </>
+          
+          {/* Scroll to top button */}
+          <button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-6 left-6 z-40 bg-gray-800/80 backdrop-blur-md p-3 rounded-full border border-gray-700 hover:bg-brand hover:text-black transition-all"
+            aria-label="Scroll to top"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
+        </div>
       )}
     </div>
   );

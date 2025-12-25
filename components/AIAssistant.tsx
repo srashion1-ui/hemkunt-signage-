@@ -1,22 +1,21 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
-import { PRODUCTS, SERVICES, COMPANY_NAME } from '../constants';
+import { PRODUCTS, SERVICES, COMPANY_NAME } from '../constants.tsx';
 
 const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{role: 'user' | 'model', text: string}[]>([
-    { role: 'model', text: `Hello! I'm the ${COMPANY_NAME} AI Assistant. How can I help you with our signage solutions today?` }
+    { role: 'model', text: `Welcome to ${COMPANY_NAME}! I'm your AI signage consultant. How can I assist with your branding project today?` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(scrollToBottom, [messages]);
+  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -27,79 +26,73 @@ const AIAssistant: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Defensive check for process.env
-      const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : null;
-
-      if (!apiKey) {
-         setTimeout(() => {
-           setMessages(prev => [...prev, { role: 'model', text: "I'm currently running in demo mode. Please configure the Gemini API Key to enable real responses." }]);
-           setIsLoading(false);
-         }, 1000);
-         return;
-      }
-
-      const ai = new GoogleGenAI({ apiKey: apiKey });
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
-      const systemContext = `
-        You are an AI assistant for ${COMPANY_NAME}, a signage and branding company.
-        We offer services: ${SERVICES.map(s => s.title).join(', ')}.
-        We sell products: ${PRODUCTS.map(p => p.title).join(', ')}.
-        Our goal is to be helpful, professional, and encourage users to contact us for quotes.
-        Keep answers concise (under 50 words usually).
+      const systemInstruction = `
+        You are a world-class AI assistant for ${COMPANY_NAME}, a leading signage company.
+        Services: ${SERVICES.map(s => s.title).join(', ')}.
+        Products: ${PRODUCTS.map(p => p.title).join(', ')}.
+        Guidelines: Professional, helpful, concise (max 60 words). 
+        Always encourage users to contact the team for specialized quotes.
+        Mention that we handle projects Pan-India.
       `;
 
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: [
-          { role: 'user', parts: [{ text: systemContext + "\n\nUser Question: " + userMessage }] }
-        ]
+        contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+        config: { systemInstruction }
       });
 
-      const text = response.text || "I'm sorry, I couldn't process that.";
+      const text = response.text || "I'm sorry, I couldn't process that right now. Please try again or call our support team.";
       setMessages(prev => [...prev, { role: 'model', text }]);
     } catch (error) {
       console.error("AI Error:", error);
-      setMessages(prev => [...prev, { role: 'model', text: "Sorry, I'm having trouble connecting to the server right now." }]);
+      setMessages(prev => [...prev, { role: 'model', text: "I'm having trouble connecting. Feel free to use the contact form for urgent inquiries!" }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end">
       {isOpen && (
-        <div className="mb-4 w-80 md:w-96 bg-gray-900 border border-gray-700 rounded-lg shadow-2xl overflow-hidden flex flex-col h-[400px] animate-in slide-in-from-bottom-10 fade-in duration-300">
+        <div className="mb-4 w-[320px] md:w-[400px] bg-black border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col h-[500px] animate-in slide-in-from-bottom-10 fade-in duration-500">
           {/* Header */}
-          <div className="bg-gradient-to-r from-brand to-yellow-600 p-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Sparkles className="text-white h-5 w-5" />
-              <h3 className="font-bold text-white">AI Assistant</h3>
+          <div className="bg-gradient-to-r from-brand to-brand-red p-5 flex justify-between items-center shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                <Sparkles className="text-white h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-sm">Hemkunt AI</h3>
+                <p className="text-[10px] text-white/70">Online & ready to help</p>
+              </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
+            <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white transition-colors">
               <X size={20} />
             </button>
           </div>
 
           {/* Chat Area */}
-          <div className="flex-1 p-4 overflow-y-auto bg-black flex flex-col gap-3">
+          <div className="flex-1 p-6 overflow-y-auto bg-[#050505] flex flex-col gap-4">
             {messages.map((msg, idx) => (
               <div 
                 key={idx} 
-                className={`max-w-[85%] p-3 rounded-lg text-sm ${
+                className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
                   msg.role === 'user' 
-                    ? 'bg-gray-800 text-white self-end rounded-br-none' 
-                    : 'bg-gray-100 text-black self-start rounded-bl-none'
+                    ? 'bg-brand text-black self-end rounded-tr-none font-medium' 
+                    : 'bg-zinc-900 text-white self-start rounded-tl-none border border-white/5 shadow-md'
                 }`}
               >
                 {msg.text}
               </div>
             ))}
             {isLoading && (
-              <div className="self-start bg-gray-100 text-black p-3 rounded-lg rounded-bl-none text-sm">
-                 <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-75"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></div>
+              <div className="self-start bg-zinc-900 text-white p-4 rounded-2xl rounded-tl-none text-sm border border-white/5">
+                 <div className="flex space-x-1.5">
+                    <div className="w-1.5 h-1.5 bg-brand rounded-full animate-bounce"></div>
+                    <div className="w-1.5 h-1.5 bg-brand rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-1.5 h-1.5 bg-brand rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                  </div>
               </div>
             )}
@@ -107,19 +100,19 @@ const AIAssistant: React.FC = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
+          <div className="p-4 bg-[#0a0a0a] border-t border-white/10 flex gap-3">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask about our signage..."
-              className="flex-1 bg-black text-white text-sm px-3 py-2 rounded border border-gray-600 focus:outline-none focus:border-brand"
+              placeholder="Ask about LED letters, pylons..."
+              className="flex-1 bg-zinc-900 text-white text-sm px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:border-brand/50 transition-all"
             />
             <button 
               onClick={handleSend}
               disabled={isLoading}
-              className="bg-brand text-black p-2 rounded hover:bg-white transition-colors disabled:opacity-50"
+              className="bg-brand text-black p-3 rounded-xl hover:scale-105 transition-all disabled:opacity-50 shadow-lg shadow-brand/20"
             >
               <Send size={18} />
             </button>
@@ -129,9 +122,9 @@ const AIAssistant: React.FC = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-brand hover:bg-white text-black p-4 rounded-full shadow-lg transition-all transform hover:scale-110 flex items-center justify-center"
+        className="bg-brand hover:bg-brand-red text-black p-5 rounded-full shadow-[0_10px_30px_rgba(245,158,11,0.3)] transition-all transform hover:scale-110 flex items-center justify-center neon-border"
       >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
+        {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
       </button>
     </div>
   );

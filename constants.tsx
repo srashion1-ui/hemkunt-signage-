@@ -1,5 +1,6 @@
+
 import { Wrench, PenTool, LayoutTemplate, Settings, Monitor, Construction, Printer, Lightbulb, Trophy, Star, Hammer, ShieldCheck, ThumbsUp } from 'lucide-react';
-import { NavItem, Service, Product, Client, Testimonial } from './types';
+import { NavItem, Service, Product, Client, Testimonial } from './types.ts';
 
 export const COMPANY_NAME = "Hemkunt Signage";
 
@@ -101,7 +102,6 @@ export const TESTIMONIALS: Testimonial[] = [
   { id: 5, name: "Meera Kapoor", text: "We rely on Hemkunt for all our safety and directional signage needs across our hospital chain.", image: "https://randomuser.me/api/portraits/women/12.jpg" },
 ];
 
-// Placeholder logos - In a real scenario, these would be URLs to actual client logos like Tata, Reliance, etc.
 export const CLIENT_LOGOS = [
   "https://logo.clearbit.com/tata.com",
   "https://logo.clearbit.com/relianceindustries.com",
@@ -122,7 +122,6 @@ export const CAREERS_DATA = [
 ];
 
 export const CONTACT_INFO = {
-  // Common industrial area for Signage in Delhi, likely location for Hemkunt
   address: "B-20, Okhla Industrial Area, Phase-I, New Delhi - 110020, India",
   phones: ["+91 11 4113 0239", "+91 98100 66557"],
   email: "info@hemkuntsignage.com"
